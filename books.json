@@ -1,0 +1,37 @@
+[
+    {
+        "Id": 1,
+        "Title": "How to Win Friends and Influence People",
+        "Author": "Dale Carnegie",
+        "Price": 15,
+        "Image_url": "https://images-na.ssl-images-amazon.com/images/I/51C4Tpxn4KL._SX316_BO1,204,203,200_.jpg"
+    },
+    {
+        "Id": 2,
+        "Title": "Think and Grow Rich",
+        "Author": "Napoleon Hill",
+        "Price": 25,
+        "Image_url": "https://images-na.ssl-images-amazon.com/images/I/51Y8jwGiebL._SX328_BO1,204,203,200_.jpg"
+    },
+    {
+        "Id": 3,
+        "Title": "The 7 Habits of Highly Effective People",
+        "Author": "Stephen R. Covey",
+        "Price": 13,
+        "Image_url": "https://images-na.ssl-images-amazon.com/images/I/51qy14G7knL._SX318_BO1,204,203,200_.jpg"
+    },
+    {
+        "Id": 4,
+        "Title": "Atomic Habits",
+        "Author": "James Clear",
+        "Price": 32,
+        "Image_url": "https://prodimage.images-bn.com/pimages/9780735211292_p0_v5_s600x595.jpg"
+    },
+    {
+        "Id": 5,
+        "Title": "The 4-hour work week",
+        "Author": "Tim Ferrisss",
+        "Price": 40,
+        "Image_url": "https://images-eu.ssl-images-amazon.com/images/I/51iGkLC6jhL._SY264_BO1,204,203,200_QL40_FMwebp_.jpg"
+    }
+]
