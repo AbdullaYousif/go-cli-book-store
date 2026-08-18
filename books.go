@@ -6,6 +6,8 @@ import (
 	"os"
 	"io"
 	"text/tabwriter"
+	"flag"
+	"errors"
 
 )
 
@@ -19,7 +21,7 @@ type Book struct {
 }
 
 
-func getAllBooks() (books []Book, err error) {
+func getBooks() (books []Book, err error) {
 	jsonFile, err :=os.Open("books.json")
 	if err !=nil {
 		return
@@ -39,20 +41,52 @@ func getAllBooks() (books []Book, err error) {
 
 }
 
-func main() {
-	//Setting up CLI Data Format
-	w:= new(tabwriter.Writer)
-	w.Init(os.Stdout, 0, 8, 2, ' ', 0)
+func getAllBooks() (books []Book, err error) {
+	fs:= flag.NewFlagSet("get", flag.ExitOnError)
+	all := fs.Bool("all", false, "a bool flag")
+	fs.Parse(os.Args[2:])
+	if *all {
 
-	allBooks, err := getAllBooks()
-	if err != nil {
+		//Setting up CLI Data Format
+		w:= new(tabwriter.Writer)
+		w.Init(os.Stdout, 0, 8, 2, ' ', 0)
+		books, err = getBooks()
+
+		if err != nil {
 		return
 	}
-
-	fmt.Printf("Loaded %d books successfully!\n", len(allBooks))
-	fmt.Fprintln(w, "ID\tTitle\tAuthor\tPrice\tImageURL")
-	for _, book := range allBooks {
-		fmt.Fprintf(w, "%d\t%s\t%s\t%d\t%s\n", book.Id, book.Title, book.Author, book.Price, book.Image_url)
+		fmt.Printf("Loaded %d books successfully!\n", len(books))
+		
+		fmt.Fprintln(w, "ID\tTitle\tAuthor\tPrice\tImageURL")
+		for _, book := range books {
+			fmt.Fprintf(w, "%d\t%s\t%s\t%d\t%s\n", book.Id, book.Title, book.Author, book.Price, book.Image_url)
+		}
+		w.Flush()
+	} else {
+		err = errors.New("the 'get' command requires a flag, e.g. --all")
+    	return
 	}
-	w.Flush()
+	return
+}
+
+func main() {
+	//Base case if no command is specified
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: bookstore <command> [flags]")
+		os.Exit(1)
+	}
+
+	switch os.Args[1] {
+	case "get":
+
+		_, err := getAllBooks()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	
+	default:
+		fmt.Println("Unknown command:", os.Args[1])
+		os.Exit(1)
+	}
 }
