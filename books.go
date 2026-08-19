@@ -8,6 +8,7 @@ import (
 	"text/tabwriter"
 	"flag"
 	"errors"
+	"slices"
 
 )
 
@@ -125,6 +126,40 @@ func addBook() (error) {
 	}
 
 }
+func deleteBook() error {
+	fs := flag.NewFlagSet("delete", flag.ExitOnError)
+	id := fs.Int("id", 0, "an int flag")
+	fs.Parse(os.Args[2:])
+
+	books, err := getBooks()
+	if err != nil {
+		return err
+	}
+
+	bookCount := len(books)
+
+	books = slices.DeleteFunc(books, func(b Book) bool {
+		return b.Id == *id
+	})
+
+	bookFound := len(books) != bookCount
+	if !bookFound {
+		return errors.New("the id entered does not exist in the bookstore")
+	}
+
+	data, err := json.Marshal(books)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile("books.json", data, 0666)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Book with ID %d removed from memory.\n", *id)
+	return nil
+}
 func main() {
 	//Base case if no command is specified
 	if len(os.Args) < 2 {
@@ -143,6 +178,12 @@ func main() {
 	
 	case "add":
 		err := addBook()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	case "delete":
+		err:= deleteBook()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
