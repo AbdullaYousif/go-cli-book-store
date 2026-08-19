@@ -85,6 +85,46 @@ func getAllBooks() (books []Book, err error) {
 	return
 }
 
+func addBook() (error) {
+	fs:= flag.NewFlagSet("add", flag.ExitOnError)
+	title := fs.String("title", "", "a string flag")
+	author := fs.String("author", "", "a string flag")
+	price := fs.Int("price", 0, "an int flag")
+	imageUrl := fs.String("image_url", "", "a string flag")
+	fs.Parse(os.Args[2:])
+
+	books, err := getBooks()
+	if err != nil {
+		return err
+	}
+	maxId := books[0].Id
+
+	for _, book:= range books {
+		if book.Id > maxId {
+			maxId = book.Id
+		}
+	}
+	newBook := Book{
+		Id: maxId +1,
+		Title: *title,
+		Author: *author,
+		Price: *price,
+		Image_url: *imageUrl,
+	}
+	books = append(books, newBook)
+	data, err := json.Marshal(books)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile("books.json", data, 0666)
+	if err!= nil {
+		return err
+	} else {
+		fmt.Println("The book was sucessfully added!")
+		return nil
+	}
+
+}
 func main() {
 	//Base case if no command is specified
 	if len(os.Args) < 2 {
@@ -101,6 +141,12 @@ func main() {
 			os.Exit(1)
 		}
 	
+	case "add":
+		err := addBook()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	default:
 		fmt.Println("Unknown command:", os.Args[1])
 		os.Exit(1)
