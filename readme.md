@@ -4,6 +4,9 @@ A simple command-line bookstore manager written in Go. Books are stored in a loc
 
 This project was built to get hands-on with Go: structs, JSON marshaling, the `flag` package, and basic CLI design.
 
+## Demo
+<img width="800" height="495" alt="go-cli-book-store-demo" src="https://github.com/user-attachments/assets/a919b6bd-e23e-40b7-8037-0fcf99d152be" />
+
 ## Features
 
 - List all books in a formatted table
