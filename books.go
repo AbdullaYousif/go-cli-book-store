@@ -44,10 +44,10 @@ func getBooks() (books []Book, err error) {
 func getAllBooks() (books []Book, err error) {
 	fs:= flag.NewFlagSet("get", flag.ExitOnError)
 	all := fs.Bool("all", false, "a bool flag")
+	id := fs.Int("id", 0, "an int flag")
+	bookFound := false
 	fs.Parse(os.Args[2:])
-	if *all {
-
-		//Setting up CLI Data Format
+	//Setting up CLI Data Format
 		w:= new(tabwriter.Writer)
 		w.Init(os.Stdout, 0, 8, 2, ' ', 0)
 		books, err = getBooks()
@@ -55,6 +55,8 @@ func getAllBooks() (books []Book, err error) {
 		if err != nil {
 		return
 	}
+
+	if *all {
 		fmt.Printf("Loaded %d books successfully!\n", len(books))
 		
 		fmt.Fprintln(w, "ID\tTitle\tAuthor\tPrice\tImageURL")
@@ -62,10 +64,24 @@ func getAllBooks() (books []Book, err error) {
 			fmt.Fprintf(w, "%d\t%s\t%s\t%d\t%s\n", book.Id, book.Title, book.Author, book.Price, book.Image_url)
 		}
 		w.Flush()
+	} else if *id != 0 {
+		for _, book := range books {
+			if book.Id == *id {
+				bookFound = true
+				fmt.Fprintln(w, "ID\tTitle\tAuthor\tPrice\tImageURL")
+				fmt.Fprintf(w, "%d\t%s\t%s\t%d\t%s\n", book.Id, book.Title, book.Author, book.Price, book.Image_url)
+				w.Flush()
+			} 
+		}
+		if !bookFound {
+			err = errors.New("the id entered does not exist in the bookstore")
+			return
+		}
+
 	} else {
 		err = errors.New("the 'get' command requires a flag, e.g. --all")
     	return
-	}
+	} 
 	return
 }
 
