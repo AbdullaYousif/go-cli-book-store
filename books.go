@@ -166,28 +166,34 @@ func updateBook() error {
 	price := fs.Int("price", 0, "an int flag")
 	imageUrl := fs.String("image_url", "", "a string flag")
 	fs.Parse(os.Args[2:])
-	bookFound := false
 
 	books, err := getBooks()
 	if err != nil {
 		return err
 	}
-
+	bookIndex := -1
 	for index, book := range books {
 		if book.Id == *id {
-			bookFound = true
-			books[index].Id = *id
-			books[index].Title = *title
-			books[index].Author = *author
-			books[index].Price = *price
-			books[index].Image_url = *imageUrl
+			bookIndex = index
+			break
 		}
 	}
 
-	if !bookFound {
+	if bookIndex == -1 {
 		return errors.New("the id entered does not exist in the bookstore")
 	}
-
+	fs.Visit(func(f *flag.Flag) {
+		switch f.Name {
+		case "title":
+			books[bookIndex].Title = *title
+		case "author":
+			books[bookIndex].Author = *author
+		case "price":
+			books[bookIndex].Price = *price
+		case "image_url":
+			books[bookIndex].Image_url = *imageUrl
+		}
+	})
 	data, err := json.Marshal(books)
 	if err != nil {
 		return err

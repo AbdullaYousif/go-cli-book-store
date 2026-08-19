@@ -81,4 +81,3 @@ Create a `books.json` file in the same directory as the binary or use the existi
 ## Notes
 
 - All commands read from and write to `books.json` in the current working directory.
-- `update` requires every flag to be passed; omitted fields will be overwritten with empty/zero values.
